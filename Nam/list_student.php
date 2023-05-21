@@ -15,17 +15,24 @@ session_start();
                 <h1 class="modal-title fs-5" id="createModalLabel">Modal title</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="form-groups">
-                    <label for="">Name</label>
-                    <input type="text" class="form-control">
-                </div>
+            <form action="log.php" method="POST">
+                <div class="modal-body">
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+                    <div class="form-groups">
+                        <label for="">code_course</label>
+                        <input type="text" class="form-control" name="c_course">
+                    </div>
+                    <div class="form-groups">
+                        <label for="">Date</label>
+                        <input type="datetime-local" class="form-control" name="s_date">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="save_date">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

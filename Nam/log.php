@@ -32,3 +32,17 @@ if (isset($_POST['save'])) {
         die(mysqli_error($conn));
     }
 }
+if (isset($_POST['save_date'])) {
+    $code_c = $_POST['c_course'];
+    $datee = date('Y-m-d H:i:s', strtotime($_POST['s_date']));
+
+    $sql = "INSERT INTO attendance (code_course, time_attendance) VALUES ('$code_c','$datee')";
+    $Result = mysqli_query($conn, $sql);
+    if ($Result) {
+        $_SESSION['status'] = "success";
+        header("Location: list_studen.php");
+    } else {
+        $_SESSION['status'] = "not found";
+        header("Location: list_student.php");
+    }
+}
