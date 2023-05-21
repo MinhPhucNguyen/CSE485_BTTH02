@@ -17,14 +17,17 @@ $courses = $query->fetchAll();
     <!-- Main content -->
     <div class="container-fluid mt-4">
 
-        <div class="alert alert-success alert-dismissible fade show fw-bolder" role="alert">
-            <?php
-            if (isset($_SESSION['success'])) {
-                echo $_SESSION['success'];
-            }
-            ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        <?php
+        if (isset($_SESSION['success'])) {
+        ?>
+            <div class="alert alert-success alert-dismissible fade show fw-bolder" role="alert">
+                <?= $_SESSION['success'] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php
+            unset($_SESSION['success']);
+        }
+        ?>
 
         <div class="card">
             <div class="card-header">
@@ -61,16 +64,16 @@ $courses = $query->fetchAll();
                                     </div>
                                     <div class="border rounded-bottom">
                                         <?php
-                                        $sql = "SELECT r.id_class, c.class_name, c.time_class, c.id_teacher, c.code_course 
+                                        $sql = "SELECT r.state, r.id_class, c.class_name, c.time_class, c.id_teacher, c.code_course 
                                         FROM registered as r INNER JOIN classes as c ON r.id_class = c.id_class WHERE c.code_course = ?";
                                         $query = $conn->prepare($sql);
                                         $query->bindValue(1, $course['code_course']);
                                         $query->execute();
-                                        $registered = $query->fetchAll();
+                                        $registers = $query->fetchAll();
 
                                         // var_dump($registered);
-                                        if (!empty($registered)) {
-                                            foreach ($registered as $registered) {
+                                        if (!empty($registers)) {
+                                            foreach ($registers as $registered) {
 
                                         ?>
                                                 <div class="p-3">
@@ -94,7 +97,7 @@ $courses = $query->fetchAll();
                                                                 <td name="time_class"><?= $registered['time_class'] ?></td>
                                                                 <td name="class_name"><?= $registered['class_name'] ?></td>
                                                                 <td name="id_teacher"><?= $registered['id_teacher'] ?></td>
-                                                                <td> <button type="submit" name="registerBtn" class="btn btn-success text-white" disabled>Registered</button></td>
+                                                                <td> <button type="submit" name="registerBtn" class="btn btn-success text-white" <?= $registered['state'] == 1 ? 'disabled' : '' ?>><?= $registered['state'] == 1 ? 'Registered' : '' ?></button></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -122,6 +125,16 @@ $courses = $query->fetchAll();
 <?php
 include('../CSE485_BTTH02/layouts/includes/sidebar.php');
 ?>
+
+<script>
+    $alertSuccess = document.querySelector('.alert-success');
+    // console.log($alertSuccess);
+    if ($alertSuccess) {
+        setTimeout(() => {
+            $alertSuccess.remove();
+        }, 2500)
+    }
+</script>
 
 <?php
 include('./layouts/assets/footer.php');

@@ -28,8 +28,7 @@ if (isset($_POST['registerBtn'])) {
     if ($query->rowCount() > 0) {
         $_SESSION['success'] = "Register class successfully";
         Header("Location: registered.php");
-    }
-    else{
+    } else {
         $_SESSION['error'] = "Register class failed";
         Header("Location: courses.php");
     }
@@ -108,7 +107,9 @@ if (isset($_POST['registerBtn'])) {
                                                                     <td name="time_class"><?= $class['time_class'] ?></td>
                                                                     <td name="class_name"><?= $class['class_name'] ?></td>
                                                                     <td name="id_teacher"><?= $class['id_teacher'] ?></td>
-                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-warning text-white">Register</button></td>
+                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-warning text-white">
+                                                                                Register
+                                                                        </button></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
