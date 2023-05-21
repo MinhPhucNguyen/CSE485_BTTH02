@@ -1,40 +1,14 @@
 <?php
 session_start();
 include('./layouts/assets/header.php');
-$sql = "SELECT * FROM students WHERE id_std = 1 LIMIT 1";
-$query = $conn->prepare($sql);
-$query->execute();
-$student = $query->fetch();
-$_SESSION['student'] = $student;
-// var_dump($_SESSION['student']);
 
-$sql = "SELECT * FROM courses";
+$sql = "SELECT r.*, c.course_name, c.course_desc, d.class_name, d.time_class, d.id_teacher 
+FROM registered as r INNER JOIN courses as c ON r.code_course = c.code_course 
+INNER JOIN classes as d ON r.id_class = d.id_class";
+
 $query = $conn->prepare($sql);
 $query->execute();
 $courses = $query->fetchAll();
-
-if (isset($_POST['registerBtn'])) {
-
-    $id_std = $_SESSION['student']['id_std'];
-    $id_class  = $_POST['id_class'];
-    $code_course = $_POST['code_course'];
-
-    $sql = "INSERT INTO registered (id_std, id_class, code_course) VALUES (?,?,?)";
-    $query = $conn->prepare($sql);
-    $query->bindValue(1, $id_std, PDO::PARAM_INT);
-    $query->bindValue(2, $id_class, PDO::PARAM_STR);
-    $query->bindValue(3, $code_course, PDO::PARAM_STR);
-    $query->execute();
-    if ($query->rowCount() > 0) {
-        $_SESSION['success'] = "Register class successfully";
-        Header("Location: registered.php");
-    }
-    else{
-        $_SESSION['error'] = "Register class failed";
-        Header("Location: courses.php");
-    }
-}
-
 ?>
 
 <div class="d-flex flex-column float-end" style="width: calc(100% - 280px)">
@@ -42,9 +16,19 @@ if (isset($_POST['registerBtn'])) {
 
     <!-- Main content -->
     <div class="container-fluid mt-4">
+
+        <div class="alert alert-success alert-dismissible fade show fw-bolder" role="alert">
+            <?php
+            if (isset($_SESSION['success'])) {
+                echo $_SESSION['success'];
+            }
+            ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <div class="card">
             <div class="card-header">
-                <h3>Courses List</h3>
+                <h3>Registered List</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -77,22 +61,24 @@ if (isset($_POST['registerBtn'])) {
                                     </div>
                                     <div class="border rounded-bottom">
                                         <?php
-                                        $sql = "SELECT * FROM classes WHERE code_course = ?";
+                                        $sql = "SELECT r.id_class, c.class_name, c.time_class, c.id_teacher, c.code_course 
+                                        FROM registered as r INNER JOIN classes as c ON r.id_class = c.id_class WHERE c.code_course = ?";
                                         $query = $conn->prepare($sql);
                                         $query->bindValue(1, $course['code_course']);
                                         $query->execute();
-                                        $classes = $query->fetchAll();
-                                        // var_dump($classes);
-                                        if (!empty($classes)) {
-                                            foreach ($classes as $class) {
+                                        $registered = $query->fetchAll();
+
+                                        // var_dump($registered);
+                                        if (!empty($registered)) {
+                                            foreach ($registered as $registered) {
 
                                         ?>
                                                 <div class="p-3">
-                                                    <form action="courses.php" method="POST" id="checkboxForm">
-                                                        <input type="hidden" name="code_course" value="<?= $class['code_course'] ?>">
-                                                        <input type="hidden" name="id_class" value="<?= $class['id_class'] ?>">
+                                                    <form action="" method="POST" id="checkboxForm">
+                                                        <input type="hidden" name="code_course" value="<?= $registered['code_course'] ?>">
+                                                        <input type="hidden" name="id_class" value="<?= $registered['id_class'] ?>">
                                                         <div class="bg-secondary text-white p-3 rounded-top">
-                                                            Class: <strong><?= $class['class_name'] ?></strong>
+                                                            Class: <strong><?= $registered['class_name'] ?></strong>
                                                         </div>
                                                         <table class="table table-bordered table-striped">
                                                             <thead>
@@ -105,10 +91,10 @@ if (isset($_POST['registerBtn'])) {
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    <td name="time_class"><?= $class['time_class'] ?></td>
-                                                                    <td name="class_name"><?= $class['class_name'] ?></td>
-                                                                    <td name="id_teacher"><?= $class['id_teacher'] ?></td>
-                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-warning text-white">Register</button></td>
+                                                                    <td name="time_class"><?= $registered['time_class'] ?></td>
+                                                                    <td name="class_name"><?= $registered['class_name'] ?></td>
+                                                                    <td name="id_teacher"><?= $registered['id_teacher'] ?></td>
+                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-success text-white">Registered</button></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
