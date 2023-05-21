@@ -107,9 +107,23 @@ if (isset($_POST['registerBtn'])) {
                                                                     <td name="time_class"><?= $class['time_class'] ?></td>
                                                                     <td name="class_name"><?= $class['class_name'] ?></td>
                                                                     <td name="id_teacher"><?= $class['id_teacher'] ?></td>
-                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-warning text-white">
-                                                                                Register
-                                                                        </button></td>
+                                                                    <td>
+                                                                        <?php
+                                                                        if (isset($_SESSION['getIDClass']) && isset($_SESSION['getState'])) {
+                                                                        ?>
+                                                                            <button type="submit" name="registerBtn" class="btn <?= ($_SESSION['getIDClass'] == $class['id_class']) && ($_SESSION['getState'] == 1) ? 'btn-success' : 'btn-primary' ?> text-white">
+                                                                                <?php
+                                                                                if (($_SESSION['getIDClass'] == $class['id_class']) && ($_SESSION['getState'] == '1')) {
+                                                                                    echo "Registered";
+                                                                                } else {
+                                                                                    echo "Register";
+                                                                                }
+                                                                                ?>
+                                                                            </button>
+                                                                        <?php
+                                                                        }
+                                                                        ?>
+                                                                    </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
