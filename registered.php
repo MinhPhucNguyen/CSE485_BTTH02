@@ -9,6 +9,8 @@ INNER JOIN classes as d ON r.id_class = d.id_class";
 $query = $conn->prepare($sql);
 $query->execute();
 $courses = $query->fetchAll();
+
+$_SESSION['getIDClass'] = '';
 ?>
 
 <div class="d-flex flex-column float-end" style="width: calc(100% - 280px)">
@@ -74,10 +76,12 @@ $courses = $query->fetchAll();
                                         // var_dump($registered);
                                         if (!empty($registers)) {
                                             foreach ($registers as $registered) {
+                                                $_SESSION['getIDClass'] = $registered['id_class'];    
+                                                $_SESSION['getState'] = $registered['state'];    
 
+                                                var_dump($_SESSION['getState']);
                                         ?>
                                                 <div class="p-3">
-
                                                     <input type="hidden" name="code_course" value="<?= $registered['code_course'] ?>">
                                                     <input type="hidden" name="id_class" value="<?= $registered['id_class'] ?>">
                                                     <div class="bg-secondary text-white p-3 rounded-top">

@@ -9,11 +9,11 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="courses.php" class="nav-link  text-primary fw-bolder" aria-current="page">
+            <a href="courses.php" class="nav-link  text-primary fw-bolder text-uppercase" aria-current="page">
                 <svg class="bi me-2 mb-4" width="16" height="16">
                     <use xlink:href="#home" />
                 </svg>
-                COURSES
+                courses
             </a>
         </li>
         <li>
@@ -25,7 +25,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="nav-link text-primary fw-bolder text-uppercase">
+            <a href="attendence.php" class="nav-link text-primary fw-bolder text-uppercase">
                 <svg class="bi me-2 mb-4" width="16" height="16">
                     <use xlink:href="#grid" />
                 </svg>
