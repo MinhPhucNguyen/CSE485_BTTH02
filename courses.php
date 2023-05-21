@@ -52,13 +52,16 @@ if (isset($_POST['registerBtn'])) {
                             <?php
                             foreach ($courses as $course) {
                             ?>
-                                <a class="list-group-item list-group-item-action" id="list-<?= $course['code_course'] ?>-list" data-bs-toggle="list" href="#list-<?= $course['code_course'] ?>" role="tab" aria-controls="list-<?= $course['code_course'] ?>">
-                                    <strong> <?= $course['course_name'] ?></strong>
-                                    </br>
-                                    <small>
-                                        <?= $course['code_course'] ?>
-                                    </small>
-                                </a>
+                            <a class="list-group-item list-group-item-action"
+                                id="list-<?= $course['code_course'] ?>-list" data-bs-toggle="list"
+                                href="#list-<?= $course['code_course'] ?>" role="tab"
+                                aria-controls="list-<?= $course['code_course'] ?>">
+                                <strong> <?= $course['course_name'] ?></strong>
+                                </br>
+                                <small>
+                                    <?= $course['code_course'] ?>
+                                </small>
+                            </a>
                             <?php
                             }
                             ?>
@@ -69,13 +72,14 @@ if (isset($_POST['registerBtn'])) {
                             <?php
                             foreach ($courses as $course) {
                             ?>
-                                <div class="tab-pane fade show" id="list-<?= $course['code_course'] ?>" role="tabpanel" aria-labelledby="list-<?= $course['code_course'] ?>-list">
-                                    <div class="border rounded-top mb-2" style="padding: 15px;">
-                                        <strong>Description:</strong></br>
-                                        <?= $course['course_desc'] ?>
-                                    </div>
-                                    <div class="border rounded-bottom">
-                                        <?php
+                            <div class="tab-pane fade show" id="list-<?= $course['code_course'] ?>" role="tabpanel"
+                                aria-labelledby="list-<?= $course['code_course'] ?>-list">
+                                <div class="border rounded-top mb-2" style="padding: 15px;">
+                                    <strong>Description:</strong></br>
+                                    <?= $course['course_desc'] ?>
+                                </div>
+                                <div class="border rounded-bottom">
+                                    <?php
                                         $sql = "SELECT * FROM classes WHERE code_course = ?";
                                         $query = $conn->prepare($sql);
                                         $query->bindValue(1, $course['code_course']);
@@ -86,45 +90,47 @@ if (isset($_POST['registerBtn'])) {
                                             foreach ($classes as $class) {
 
                                         ?>
-                                                <div class="p-3">
-                                                    <form action="courses.php" method="POST" id="checkboxForm">
-                                                        <input type="hidden" name="code_course" value="<?= $class['code_course'] ?>">
-                                                        <input type="hidden" name="id_class" value="<?= $class['id_class'] ?>">
-                                                        <div class="bg-secondary text-white p-3 rounded-top">
-                                                            Class: <strong><?= $class['class_name'] ?></strong>
-                                                        </div>
-                                                        <table class="table table-bordered table-striped">
-                                                            <thead>
-                                                                <tr class="fw-bolder">
-                                                                    <td>Time</td>
-                                                                    <td>Class</td>
-                                                                    <td>Teacher</td>
-                                                                    <td>Register</td>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td name="time_class"><?= $class['time_class'] ?></td>
-                                                                    <td name="class_name"><?= $class['class_name'] ?></td>
-                                                                    <td name="id_teacher"><?= $class['id_teacher'] ?></td>
-                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-warning text-white">
-                                                                                Register
-                                                                        </button></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </form>
-                                                </div>
-                                            <?php
+                                    <div class="p-3">
+                                        <form action="courses.php" method="POST" id="checkboxForm">
+                                            <input type="hidden" name="code_course"
+                                                value="<?= $class['code_course'] ?>">
+                                            <input type="hidden" name="id_class" value="<?= $class['id_class'] ?>">
+                                            <div class="bg-secondary text-white p-3 rounded-top">
+                                                Class: <strong><?= $class['class_name'] ?></strong>
+                                            </div>
+                                            <table class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr class="fw-bolder">
+                                                        <td>Time</td>
+                                                        <td>Class</td>
+                                                        <td>Teacher</td>
+                                                        <td>Register</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td name="time_class"><?= $class['time_class'] ?></td>
+                                                        <td name="class_name"><?= $class['class_name'] ?></td>
+                                                        <td name="id_teacher"><?= $class['id_teacher'] ?></td>
+                                                        <td> <button type="submit" name="registerBtn"
+                                                                class="btn btn-warning text-white">
+                                                                Register
+                                                            </button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </form>
+                                    </div>
+                                    <?php
                                             }
                                         } else {
                                             ?>
-                                            <div class="text-danger text-center fw-bolder">No Classes</div>
-                                        <?php
+                                    <div class="text-danger text-center fw-bolder">No Classes</div>
+                                    <?php
                                         }
                                         ?>
-                                    </div>
                                 </div>
+                            </div>
                             <?php
                             }
                             ?>
