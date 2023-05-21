@@ -74,31 +74,30 @@ $courses = $query->fetchAll();
 
                                         ?>
                                                 <div class="p-3">
-                                                    <form action="" method="POST" id="checkboxForm">
-                                                        <input type="hidden" name="code_course" value="<?= $registered['code_course'] ?>">
-                                                        <input type="hidden" name="id_class" value="<?= $registered['id_class'] ?>">
-                                                        <div class="bg-secondary text-white p-3 rounded-top">
-                                                            Class: <strong><?= $registered['class_name'] ?></strong>
-                                                        </div>
-                                                        <table class="table table-bordered table-striped">
-                                                            <thead>
-                                                                <tr class="fw-bolder">
-                                                                    <td>Time</td>
-                                                                    <td>Class</td>
-                                                                    <td>Teacher</td>
-                                                                    <td>Register</td>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td name="time_class"><?= $registered['time_class'] ?></td>
-                                                                    <td name="class_name"><?= $registered['class_name'] ?></td>
-                                                                    <td name="id_teacher"><?= $registered['id_teacher'] ?></td>
-                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-success text-white">Registered</button></td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </form>
+
+                                                    <input type="hidden" name="code_course" value="<?= $registered['code_course'] ?>">
+                                                    <input type="hidden" name="id_class" value="<?= $registered['id_class'] ?>">
+                                                    <div class="bg-secondary text-white p-3 rounded-top">
+                                                        Class: <strong><?= $registered['class_name'] ?></strong>
+                                                    </div>
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr class="fw-bolder">
+                                                                <td>Time</td>
+                                                                <td>Class</td>
+                                                                <td>Teacher</td>
+                                                                <td>Register</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td name="time_class"><?= $registered['time_class'] ?></td>
+                                                                <td name="class_name"><?= $registered['class_name'] ?></td>
+                                                                <td name="id_teacher"><?= $registered['id_teacher'] ?></td>
+                                                                <td> <button type="submit" name="registerBtn" class="btn btn-success text-white" disabled>Registered</button></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             <?php
                                             }
