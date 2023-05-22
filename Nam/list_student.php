@@ -57,27 +57,42 @@ session_start();
                                     <th scope="col">name</th>
                                     <th scope="col">code_course</th>
                                     <th scope="col">state</th>
+                                    <th scope="col">time_attendance</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT s.id_std AS id , s.name, a.code_course, a.state FROM students s INNER JOIN attendance AS a ON s.id_std = a.id_std";
+                                $sql = "SELECT s.id_std AS id , s.name, a.code_course, a.state, a.time_attendance FROM students s INNER JOIN attendance AS a ON s.id_std = a.id_std";
                                 $result = mysqli_query($conn, $sql);
+                                $data = array();
+
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $status = '';
+                                    if ($row["state"] == 'present') {
+                                        $status = '<span class="badge bg-success">Present</span>';
+                                    } elseif ($row["state"] == 'absent') {
+                                        $status = '<label class="badge bg-danger">Absent</label>';
+                                    }
+
+                                    $data[] = array(
+                                        $row["id"],
+                                        $row["name"],
+                                        $row["code_course"],
+                                        $status,
+                                        $row["time_attendance"]
+                                    );
+                                }
 
                                 if (mysqli_num_rows($result) > 0) {
-                                    foreach ($result as $row) { ?>
+                                    foreach ($data as $row) { ?>
                                         <tr>
-                                            <td><?php echo $row['id']; ?></td>
-                                            <td><?php echo $row['name']; ?></td>
-                                            <td><?php echo $row['code_course']; ?></td>
-                                            <td><?php if ([$row['state'] == 'present']) {
-                                                    echo '<span class="badge bg-success">Present</span>';
-                                                }  ?>
-                                            </td>
+                                            <td><?php echo $row[0]; ?></td>
+                                            <td><?php echo $row[1]; ?></td>
+                                            <td><?php echo $row[2]; ?></td>
+                                            <td><?php echo $row[3]; ?></td>
+                                            <td><?php echo $row[4]; ?></td>
 
-                                            <td>
-                                                <button type="button" class="btn btn-warning"><a href="list_student.php" class="text-white link-underline-warning">View</a></button>
-                                            </td>
                                         </tr>
                                 <?php
                                     }
@@ -100,37 +115,7 @@ session_start();
 
 
 <script>
-    $(document).ready(function() {
-        $('.edit_btn').click(function(e) {
-            e.preventDefault();
 
-            var id_t = $(this).closest('.abc').find('.id_t').text();
-            $.ajax({
-                type: "POST",
-                url: 'log.php',
-
-                data: {
-                    'savee': true,
-                    'teacher_id': id_t
-                },
-                success: function(response) {
-                    $.each(response, function(key, value) {
-                        $('#edit_id').val(value['id_teacher']);
-                        $('#edit_name').val(value['name']);
-                        $('#edit_email').val(value['email']);
-                        $('#edit_phone').val(value['phone']);
-                    });
-
-
-                    $('#editTeacherModal').modal('show');
-                },
-                error: function() {
-                    console.log('Có lỗi xảy ra khi cập nhật dữ liệu');
-                }
-            });
-
-        });
-    });
 </script>
 </body>
 
