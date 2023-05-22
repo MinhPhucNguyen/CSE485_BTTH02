@@ -10,7 +10,31 @@ $query = $conn->prepare($sql);
 $query->execute();
 $courses = $query->fetchAll();
 
-$_SESSION['getIDClass'] = '';
+if (isset($_POST['unregisterd-btn'])) {
+    $id_class = $_POST['unregisterd-btn'];
+    // var_dump($id_class);
+    $id_std = $_SESSION['student']['id_std'];
+    // var_dump($id_std);
+    $code_course = $_POST['code_course'];
+    // var_dump($code_course);
+
+    $sql = "DELETE FROM registered WHERE id_std = ? AND id_class = ? AND code_course = ?";
+    $query = $conn->prepare($sql);
+    $query->bindValue(1, $id_std, PDO::PARAM_INT);
+    $query->bindValue(2, $id_class, PDO::PARAM_STR);
+    $query->bindValue(3, $code_course, PDO::PARAM_STR);
+    $query->execute();
+
+    if ($query->rowCount() > 0) {
+        $_SESSION['success'] = "Unregisterd class successfully";
+        Header("Location: registered.php");
+    } else {
+        $_SESSION['error'] = "Unregisterd class failed";
+        Header("Location: registered.php");
+    }
+}
+
+
 ?>
 
 <div class="d-flex flex-column float-end" style="width: calc(100% - 280px)">
@@ -66,26 +90,21 @@ $_SESSION['getIDClass'] = '';
                                     </div>
                                     <div class="border rounded-bottom">
                                         <?php
-                                        $sql = "SELECT r.state, r.id_class, c.class_name, c.time_class, c.id_teacher, c.code_course 
-                                        FROM registered as r INNER JOIN classes as c ON r.id_class = c.id_class WHERE c.code_course = ?";
+                                        $sql = "SELECT r.state, r.id_class, r.code_course, c.class_name, c.time_class, c.id_teacher, c.code_course 
+                                        FROM registered as r INNER JOIN classes as c ON r.id_class = c.id_class WHERE c.code_course = ? GROUP BY c.code_course ";
+
                                         $query = $conn->prepare($sql);
                                         $query->bindValue(1, $course['code_course']);
                                         $query->execute();
-                                        $registers = $query->fetchAll();
+                                        $classes = $query->fetchAll();
 
-                                        // var_dump($registered);
-                                        if (!empty($registers)) {
-                                            foreach ($registers as $registered) {
-                                                $_SESSION['getIDClass'] = $registered['id_class'];    
-                                                $_SESSION['getState'] = $registered['state'];    
-
-                                                var_dump($_SESSION['getState']);
+                                        if (!empty($classes)) {
+                                            foreach ($classes as $class) {
                                         ?>
                                                 <div class="p-3">
-                                                    <input type="hidden" name="code_course" value="<?= $registered['code_course'] ?>">
-                                                    <input type="hidden" name="id_class" value="<?= $registered['id_class'] ?>">
+                                                    <!-- <input type="hidden" name="id_class" value=""> -->
                                                     <div class="bg-secondary text-white p-3 rounded-top">
-                                                        Class: <strong><?= $registered['class_name'] ?></strong>
+                                                        Class: <strong><?= $class['class_name'] ?></strong>
                                                     </div>
                                                     <table class="table table-bordered table-striped">
                                                         <thead>
@@ -93,15 +112,21 @@ $_SESSION['getIDClass'] = '';
                                                                 <td>Time</td>
                                                                 <td>Class</td>
                                                                 <td>Teacher</td>
-                                                                <td>Register</td>
+                                                                <td>Action</td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td name="time_class"><?= $registered['time_class'] ?></td>
-                                                                <td name="class_name"><?= $registered['class_name'] ?></td>
-                                                                <td name="id_teacher"><?= $registered['id_teacher'] ?></td>
-                                                                <td> <button type="submit" name="registerBtn" class="btn btn-success text-white" <?= $registered['state'] == 1 ? 'disabled' : '' ?>><?= $registered['state'] == 1 ? 'Registered' : '' ?></button></td>
+                                                                <td name="time_class"><?= $class['time_class'] ?></td>
+                                                                <td name="class_name"><?= $class['class_name'] ?></td>
+                                                                <td name="id_teacher"><?= $class['id_teacher'] ?></td>
+                                                                <td>
+                                                                    <button type="submit" name="registerBtn" class="btn btn-success text-white" <?= $class['state'] == 1 ? 'disabled' : '' ?>><?= $class['state'] == 1 ? 'Registered' : '' ?></button>
+                                                                    <form action="registered.php" method="POST" class="d-inline-block">
+                                                                        <input type="hidden" name="code_course" value="<?= $class['code_course'] ?>">
+                                                                        <button type="submit" class="btn btn-danger" name="unregisterd-btn" value="<?= $class['id_class'] ?>">Unregistered</button>
+                                                                    </form>
+                                                                </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
