@@ -31,7 +31,6 @@ $sconn = "$type:host=$server;dbname=$db;port=$port;charset=$charset";
         if(isset($_POST["add-btn"])) { $name = $_POST['name'];$birth = $_POST['birth']; $birth1 = date("Y-m-d", strtotime($birth)); ;$phone = $_POST['phone']; $email = $_POST['email']; 
         $sql_add = "INSERT INTO students (name,birth, phone, email)
         VALUES ('$name', '$birth', '$phone', '$email')";
-        $sql_id = "SELECT id_std FROM students";
         $add = $pdo->prepare($sql_add);
         $add->execute();
         if ($add) {
@@ -47,8 +46,8 @@ $sconn = "$type:host=$server;dbname=$db;port=$port;charset=$charset";
     
 
     //edit
-        if(isset($_POST["edit-btn"])){
-            $id_std = $_POST["edit-btn"];
+        if(isset($_POST["edit_btn"])){
+            $id_std = $_POST["edit_btn"];
             $sql_select_edit = "SELECT *FROM students WHERE id_std ='$id_std'";
             $select_edit = $pdo->query($sql_select_edit);
             $datas_select_edit = $select_edit->fetch();
@@ -118,7 +117,7 @@ $sconn = "$type:host=$server;dbname=$db;port=$port;charset=$charset";
             <td><?php echo $data['phone']?></td>
             <td><?php echo $data['email']?></td>
             <td><?php echo $data['id_class']?></td>
-            <td>
+            <td>              
                 <button type="submit" value="<?= $data['id_std']?>" name="edit_btn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit">Edit</button>
                 <form action="admin-sv.php" class="d-inline-block" method="POST">
                     <button type="submit" value="<?= $data['id_std']?>" name="delete_btn" class="btn btn-danger">Delete</button>
@@ -197,6 +196,9 @@ $sconn = "$type:host=$server;dbname=$db;port=$port;charset=$charset";
                     <div class="card">
                         <div class="card-header text-center bg-secondary">
                             <h2 class="text-white">Edit Student</h2>
+                            <?php
+                            var_dump($_POST['edit_btn']);
+                            ?>
                             <button type="button" class="btn btn-close btn-light float-end" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="card-body mx-auto p-4 " style="width: 500px;">                
