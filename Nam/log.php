@@ -1,5 +1,9 @@
 <?php
 session_start();
+// $id_c = $_SESSION['id_class'];
+// $cod_c = $_SESSION['code_course'];
+
+
 include './include/connect.php';
 
 if (isset($_POST['savee'])) {
@@ -25,22 +29,28 @@ if (isset($_POST['save'])) {
     $Result = mysqli_query($conn, $sql);
     if ($Result) {
         $_SESSION['status'] = "success";
-
         header("Location: teacher_profile.php");
     } else {
         $_SESSION['status'] = "not found";
         die(mysqli_error($conn));
     }
 }
-if (isset($_POST['save_date'])) {
-    $code_c = $_POST['c_course'];
-    $datee = date('Y-m-d H:i:s', strtotime($_POST['s_date']));
 
-    $sql = "INSERT INTO attendance (code_course, time_attendance) VALUES ('$code_c','$datee')";
+if (isset($_POST['vieww'])) {
+    header("Location: list_student.php");
+}
+
+
+if (isset($_POST['save_date'])) {
+    $cod_c = $_POST['$cod_c'];
+    $id_c = $_POST['id_class'];
+    $dates = date('Y-m-d H:i:s', strtotime($_POST['s_date']));
+    $datee = date('Y-m-d H:i:s', strtotime($_POST['e_date']));
+    $sql = "INSERT INTO attend_time (code_course,id_class , time_start, time_end) VALUES ('$cod_c','$id_c','$dates','$datee')";
     $Result = mysqli_query($conn, $sql);
     if ($Result) {
         $_SESSION['status'] = "success";
-        header("Location: list_studen.php");
+        header("Location: list_student.php");
     } else {
         $_SESSION['status'] = "not found";
         header("Location: list_student.php");

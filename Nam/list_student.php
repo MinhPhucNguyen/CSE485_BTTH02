@@ -4,7 +4,11 @@ use LDAP\Result;
 
 include './include/connect.php';
 session_start();
+// $id_c = $_SESSION['id_class'];
+// $cod_c = $_SESSION['code_course'];
 ?>
+
+<!-- SELECT TIMEDIFF('2023-05-22 19:08:20', '2023-05-22 20:08:20'); -->
 
 <?php require_once './include/header.php'; ?>
 
@@ -12,19 +16,18 @@ session_start();
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="createModalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="createModalLabel">Create attendance time</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="log.php" method="POST">
                 <div class="modal-body">
-
                     <div class="form-groups">
-                        <label for="">code_course</label>
-                        <input type="text" class="form-control" name="c_course">
+                        <label for="">DateStart</label>
+                        <input type="datetime-local" class="form-control" name="s_date">
                     </div>
                     <div class="form-groups">
-                        <label for="">Date</label>
-                        <input type="datetime-local" class="form-control" name="s_date">
+                        <label for="">DateEnd</label>
+                        <input type="datetime-local" class="form-control" name="e_date">
                     </div>
 
                 </div>
@@ -43,7 +46,8 @@ session_start();
             <div class="card">
                 <div class="card-header">
                     <h5 class="fs-2 fw-bold">Class
-                        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#createModal">create attendence</button>
+                        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal"
+                            data-bs-target="#createModal">create attendence</button>
                     </h5>
 
 
@@ -55,15 +59,15 @@ session_start();
                                 <tr>
                                     <th scope="col">id_student</th>
                                     <th scope="col">name</th>
-                                    <th scope="col">code_course</th>
                                     <th scope="col">state</th>
-                                    <th scope="col">time_attendance</th>
+                                    <th scope="col">time</th>
+
 
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT s.id_std AS id , s.name, a.code_course, a.state, a.time_attendance FROM students s INNER JOIN attendance AS a ON s.id_std = a.id_std";
+                                $sql = "SELECT s.id_std AS id , s.name, a.code_course, a.state, CAST(a.time_attendance AS DATE) AS dates FROM students s INNER JOIN attendance AS a ON s.id_std = a.id_std";
                                 $result = mysqli_query($conn, $sql);
                                 $data = array();
 
@@ -78,32 +82,25 @@ session_start();
                                     $data[] = array(
                                         $row["id"],
                                         $row["name"],
-                                        $row["code_course"],
                                         $status,
-                                        $row["time_attendance"]
+                                        $row["dates"]
                                     );
                                 }
 
                                 if (mysqli_num_rows($result) > 0) {
                                     foreach ($data as $row) { ?>
-                                        <tr>
-                                            <td><?php echo $row[0]; ?></td>
-                                            <td><?php echo $row[1]; ?></td>
-                                            <td><?php echo $row[2]; ?></td>
-                                            <td><?php echo $row[3]; ?></td>
-                                            <td><?php echo $row[4]; ?></td>
-
-                                        </tr>
+                                <tr>
+                                    <td><?php echo $row[0]; ?></td>
+                                    <td><?php echo $row[1]; ?></td>
+                                    <td><?php echo $row[2]; ?></td>
+                                    <td><?php echo $row[3]; ?></td>
+                                </tr>
                                 <?php
                                     }
                                 }
                                 ?>
-
-
-
                             </tbody>
                         </table>
-
                     </h5>
                 </div>
             </div>
