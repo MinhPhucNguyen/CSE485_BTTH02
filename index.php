@@ -15,7 +15,7 @@ $_SESSION['student'] = $student;
 <div class="d-flex flex-column float-end" style="width: calc(100% - 280px)">
     <?php include('../CSE485_BTTH02/layouts/includes/topbar.php') ?>
     <div class="container-fluid mt-4">
-        <h3> <span>Welcome, </span><strong><?= $student['name']?></strong></h3>
+        <h3> <span>Welcome, </span><strong><?= $student['name'] ?></strong></h3>
     </div>
 </div>
 <?php
@@ -25,6 +25,3 @@ include('../CSE485_BTTH02/layouts/includes/sidebar.php');
 <?php
 include('./layouts/assets/footer.php');
 ?>
-
-
-

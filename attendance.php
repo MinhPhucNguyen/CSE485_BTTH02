@@ -55,9 +55,9 @@ if (isset($_POST['attendence-btn'])) {
     $query->bindValue(5, $state, PDO::PARAM_INT);
     $query->execute();
 
-    if ($query->rowCount() > 0) {
+    if ($query) {
         $_SESSION['success'] = "Attendance successfully";
-        Header("Location: attendance.php");
+        header("Location: attendance.php");
     }
 }
 
@@ -111,65 +111,63 @@ if (isset($_POST['attendence-btn'])) {
                                 <div class="tab-pane fade show" id="list-<?= $course['code_course'] ?>" role="tabpanel" aria-labelledby="list-<?= $course['code_course'] ?>-list">
                                     <div class="border rounded-bottom">
                                         <?php
-                                        $sql = "SELECT * FROM classes WHERE code_course = ?";
+                                        $sql = "SELECT c.*, a.time_start, a.time_end FROM classes as c INNER JOIN attend_time as a ON c.code_course = a.code_course  WHERE c.code_course = ?";
                                         $query = $conn->prepare($sql);
                                         $query->bindValue(1, $course['code_course']);
                                         $query->execute();
                                         $classes = $query->fetchAll();
                                         // var_dump($classes);
-                                        if (!empty($classes)) {
-                                            foreach ($classes as $class) {
-                                                $isAttendanced = false;
-                                                foreach($attendanceList as $attendance){
-                                                    if(($attendance['code_course'] == $class['code_course'])
-                                                     && ($attendance['id_std'] == $_SESSION['student']['id_std']) 
-                                                     && ($attendance['id_class'] == $class['id_class'])){
-                                                        $isAttendanced = true;
-                                                    }
+                                        foreach ($classes as $class) {
+                                            $isAttendanced = false;
+                                            foreach ($attendanceList as $attendance) {
+                                                if (($attendance['code_course'] == $class['code_course'])
+                                                    && ($attendance['id_std'] == $_SESSION['student']['id_std'])
+                                                    && ($attendance['id_class'] == $class['id_class'])
+                                                ) {
+                                                    $isAttendanced = true;
                                                 }
-                                        ?>
-                                                <div class="p-3">
-                                                    <form action="attendance.php" method="POST" id="checkboxForm">
-                                                        <input type="hidden" name="code_course" value="<?= $class['code_course'] ?>">
-                                                        <input type="hidden" name="id_class" value="<?= $class['id_class'] ?>">
-                                                        <input type="hidden" name="timeClass" value="<?= $class['time_class'] ?>">
-                                                        <div class="bg-secondary text-white p-3 rounded-top">
-                                                            Class: <strong><?= $class['class_name'] ?></strong>
-                                                        </div>
-                                                        <table class="table table-bordered table-striped class-section">
-                                                            <thead>
-                                                                <tr class="fw-bolder">
-                                                                    <td>Time</td>
-                                                                    <td>Class</td>
-                                                                    <td>State</td>
-                                                                    <td>Attendence</td>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td name="time_class"><?= $class['time_class'] ?></td>
-                                                                    <td name="class_name"><?= $class['class_name'] ?></td>
-                                                                    <td name="id_teacher">
-                                                                        <input type="radio" name="radio" value="1" <?= $isAttendanced ? 'checked' : ''?>>
-                                                                        <label for="radio" class="fw-bolder"> <span class="text-danger">*</span> Present</label>
-                                                                        <input type="radio" name="radio" value="0">
-                                                                        <label for="radio" class="fw-bolder"> <span class="text-danger">*</span>Absent</label>
-                                                                    </td>
-                                                                    <td>
-                                                                        <button type="submit" name="attendence-btn" class="btn <?= $isAttendanced ? 'btn-success' : 'btn-primary'?> text-white"  <?= $isAttendanced ? 'disabled' : ''?>>
-                                                                        <?= $isAttendanced ? 'Submited' : 'Submit'?>
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </form>
-                                                </div>
-                                            <?php
                                             }
-                                        } else {
-                                            ?>
-                                            <div class="text-danger text-center fw-bolder">No attendance for this class</div>
+                                        ?>
+                                            <div class="p-3">
+                                                <form action="attendance.php" method="POST" id="checkboxForm">
+                                                    <input type="hidden" name="code_course" value="<?= $class['code_course'] ?>">
+                                                    <input type="hidden" name="id_class" value="<?= $class['id_class'] ?>">
+                                                    <input type="hidden" name="timeClass" value="<?= $class['time_class'] ?>">
+                                                    <div class="bg-secondary text-white p-3 rounded-top">
+                                                        Class: <strong><?= $class['class_name'] ?></strong>
+                                                    </div>
+                                                    <table class="table table-bordered table-striped class-section">
+                                                        <thead>
+                                                            <tr class="fw-bolder">
+                                                                <td>Time</td>
+                                                                <td>Class</td>
+                                                                <td>State</td>
+                                                                <td>Attendence</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="fw-bolder">
+                                                                    <input type="hidden" name="time_class" value="<?= date("Y-m-d H:i:s") ?>">
+                                                                    <?= $class['time_start'] ?> <i class="fa-solid fa-arrow-right text-danger"></i> <?= $class['time_end'] ?>
+                                                                </td>
+                                                                <td name="class_name"><?= $class['class_name'] ?></td>
+                                                                <td name="id_teacher">
+                                                                    <input type="radio" name="radio" value="1" <?= $isAttendanced ? 'checked' : '' ?>>
+                                                                    <label for="radio" class="fw-bolder"> <span class="text-danger">*</span> Present</label>
+                                                                    <input type="radio" name="radio" value="0">
+                                                                    <label for="radio" class="fw-bolder"> <span class="text-danger">*</span>Absent</label>
+                                                                </td>
+                                                                <td>
+                                                                    <button type="submit" name="attendence-btn" class="btn <?= $isAttendanced ? 'btn-success' : 'btn-primary' ?> text-white" <?= $isAttendanced ? 'disabled' : '' ?>>
+                                                                        <?= $isAttendanced ? 'Submited' : 'Submit' ?>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </form>
+                                            </div>
                                         <?php
                                         }
                                         ?>
