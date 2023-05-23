@@ -37,22 +37,73 @@ if (isset($_POST['save'])) {
 }
 
 if (isset($_POST['vieww'])) {
-    header("Location: list_student.php");
+    echo '<div class="card-body">
+    <h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">id_student</th>
+                    <th scope="col">name</th>
+                    <th scope="col">state</th>
+                    <th scope="col">time</th>
+
+
+                </tr>
+            </thead>
+            <tbody>';
+    $cod_c = $_POST['cod_c'];
+    $id_c = $_POST['id_class'];
+
+    $sql = "SELECT s.id_std AS id , s.name, a.code_course, a.state, CAST(a.time_attendance AS DATE) AS dates FROM students s INNER JOIN attendance AS a ON s.id_std = a.id_std";
+    $result = mysqli_query($conn, $sql);
+    $data = array();
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $status = '';
+        if ($row["state"] == 'present') {
+            $status = '<span class="badge bg-success">Present</span>';
+        } elseif ($row["state"] == 'absent') {
+            $status = '<label class="badge bg-danger">Absent</label>';
+        }
+
+        $data[] = array(
+            $row["id"],
+            $row["name"],
+            $status,
+            $row["dates"]
+        );
+    }
+
+    if (mysqli_num_rows($result) > 0) {
+        foreach ($data as $row) {
+            echo $return = '<tr>
+            <td>' . $row[0] . '</td>
+            <td>' . $row[1] . '</td>
+            <td>' . $row[2] . '</td>
+            <td>' . $row[3] . '</td>
+            </tr>';
+        }
+    }
+    echo '</tbody>
+    </table>
+</h5>
+</div>';
 }
 
 
-if (isset($_POST['save_date'])) {
-    $cod_c = $_POST['$cod_c'];
-    $id_c = $_POST['id_class'];
+if (isset($_POST['save_cre'])) {
+
+    $cod_c = $_POST['cod_cou'];
+    $id_c = $_POST['id_cla'];
     $dates = date('Y-m-d H:i:s', strtotime($_POST['s_date']));
     $datee = date('Y-m-d H:i:s', strtotime($_POST['e_date']));
     $sql = "INSERT INTO attend_time (code_course,id_class , time_start, time_end) VALUES ('$cod_c','$id_c','$dates','$datee')";
     $Result = mysqli_query($conn, $sql);
     if ($Result) {
         $_SESSION['status'] = "success";
-        header("Location: list_student.php");
+        header("Location: teacher_profile.php");
     } else {
         $_SESSION['status'] = "not found";
-        header("Location: list_student.php");
+        header("Location: teacher_profile.php");
     }
 }
