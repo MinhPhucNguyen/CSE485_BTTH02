@@ -18,9 +18,6 @@ try {
 } catch (PDOException $e) {
     throw new PDOException($e->getMessage(), $e->getCode());
 }
-$sql_select = "SELECT *From courses";
-$courses = $pdo->query($sql_select);
-$datas = $courses->fetchAll();
 
 //Create
 $code_course = "";
@@ -47,13 +44,17 @@ if (isset($_POST["add-btn"])) {
 
 
 //edit
-if(isset($_POST["edit_btn"])){
-    $code_course = $_POST["edit_btn"];
-    $sql_select_edit = "SELECT *FROM courses WHERE code_course ='$code_course'";
+if (isset($_POST["edit_btn"])) {
+    $edit_course_id = $_POST["edit_btn"];
+    $sql_select_edit = "SELECT * FROM courses WHERE code_course = ?";
     $select_edit = $pdo->prepare($sql_select_edit);
+    $select_edit->bindValue(1, $edit_course_id);
     $select_edit->execute();
     $datas_select_edit = $select_edit->fetch();
 }
+
+
+
 
 
 
@@ -88,15 +89,15 @@ if (isset($_POST["delete_btn"])) {
 
     <div class="container-fluid col-md-6 card-body">
         <h1 class="d-flex justify-content-center">Course management</h1><?php
-            if (isset($_SESSION['success'])) {
-            ?>
+                                                                        if (isset($_SESSION['success'])) {
+                                                                        ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <?= $_SESSION['success'] ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php
-            unset($_SESSION['success']);
-        }
+                                                                            unset($_SESSION['success']);
+                                                                        }
         ?>
         <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#create">Create</a>
         <table class="table table-bordered table-striped table-hover">
@@ -109,15 +110,19 @@ if (isset($_POST["delete_btn"])) {
             </thead>
             <tbody>
                 <?php
+                $sql_select = "SELECT * From courses";
+                $courses = $pdo->query($sql_select);
+                $datas = $courses->fetchAll();                
                 foreach ($datas as $data) { ?>
                     <tr>
-                        <td class="codeCourse"><?php echo $data['code_course'] ?></td>
+                        <td><?= $data['code_course'] ?></td>
                         <td><?php echo $data['course_name'] ?></td>
                         <td><?php echo $data['course_desc'] ?></td>
                         <td>
-                            
-                            <form action="admin-course.php" class="d-inline-block" method="POST">
-                                <a type="submit" name="edit_btn" class="btn btn-primary" value="<?= $data['code_course'] ?>" data-bs-toggle="modal" data-bs-target="#edit">Edit</a>
+
+                            <button type="submit" name="edit_btn" class="btn btn-primary" value="<?= $data['code_course'] ?>" data-bs-toggle="modal" data-bs-target="#edit">Edit</button>
+                            <form class="d-inline-block" method="POST">
+
                                 <button type="submit" name="delete_btn" class="btn btn-danger" value="<?= $data['code_course'] ?>">Delete</button>
                             </form>
                         </td>
@@ -147,7 +152,7 @@ if (isset($_POST["delete_btn"])) {
                                 <div class="form-group row mb-4">
                                     <label class="col-md-3 col-form-label text-md-right fw-bold">Name</label>
                                     <div class="col-md-12 ">
-                                        <input id="name" name="name" type="text" class="form-control" placeholder="Enter course name">
+                                        <input id="name" name="name" type="text" class="form-control" placeholder="Enter course name" >
                                     </div>
                                 </div>
                                 <div class="form-group row mb-4">
@@ -183,9 +188,6 @@ if (isset($_POST["delete_btn"])) {
                                 <input id="id" name="id" type="hidden" class="form-control" value="" disabled>
                                 <div class="form-group row mb-4">
                                     <label class="col-md-3 col-form-label text-md-right fw-bold">Code</label>
-                                    <?php
-                                    var_dump($_POST['edit_btn']);
-                                    ?>
                                     <div class="col-md-12 ">
                                         <input id="phone" name="code-course" type="text" class="form-control" value="<?= $datas_select_edit['code_course'] ?>" placeholder="Enter code course" disabled>
                                     </div>
@@ -193,7 +195,7 @@ if (isset($_POST["delete_btn"])) {
                                 <div class="form-group row mb-4">
                                     <label class="col-md-3 col-form-label text-md-right fw-bold">Name</label>
                                     <div class="col-md-12 ">
-                                        <input id="name" name="name" type="text" class="form-control" placeholder="Enter course name">
+                                        <input id="name" name="name" type="text" class="form-control" placeholder="Enter course name"  value="<?= $datas_select_edit['course_name'] ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row mb-4">
