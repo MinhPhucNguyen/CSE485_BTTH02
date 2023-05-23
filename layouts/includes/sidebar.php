@@ -25,7 +25,7 @@
             </a>
         </li>
         <li>
-            <a href="attendence.php" class="nav-link text-primary fw-bolder text-uppercase">
+            <a href="attendance.php" class="nav-link text-primary fw-bolder text-uppercase">
                 <svg class="bi me-2 mb-4" width="16" height="16">
                     <use xlink:href="#grid" />
                 </svg>

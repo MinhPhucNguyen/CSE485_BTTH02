@@ -6,6 +6,36 @@ if (isset($_SESSION['student'])) {
 }
 
 // var_dump($student);
+
+if (isset($_POST['save-btn'])) {
+    $id_std = $_POST['id_std'];
+    $name = $_POST['name'];
+    $birth = date('Y-m-d', strtotime($_POST['birth']));
+    // $birth = $_POST['birth'];
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+
+    $sql = "UPDATE students SET name = ?, birth = ?, phone = ?, email = ? WHERE id_std = ?";
+
+    $query = $conn->prepare($sql);
+    $query->bindValue(1, $name);
+    $query->bindValue(2, $birth);
+    $query->bindValue(3, $phone);
+    $query->bindValue(4, $email);
+    $query->bindValue(5, $id_std);
+
+    $query->execute();
+
+    if ($query->rowCount() > 0) {
+        $_SESSION['success'] = "Update information successfully";
+        header("Location: index.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Update information failed";
+        header("Location: index.php");
+        exit();
+    }
+}
 ?>
 
 
@@ -19,9 +49,14 @@ if (isset($_SESSION['student'])) {
             </div>
             <form action="" method="POST">
                 <div class="modal-body">
+                    <input type="hidden" value="<?= $student['id_std'] ?>" name="id_std">
+                    <div class="form-group mb-4">
+                        <label for="">Name</label>
+                        <input type="text" class="form-control" name="name" value="<?= $student['name'] ?>">
+                    </div>
                     <div class="form-group mb-4">
                         <label for="">Birth</label>
-                        <input type="date" class="form-control" name="birth" value="<?= $student['birth'] ?>">
+                        <input type="date " class="form-control" name="birth" value="<?= $student['birth'] ?>" placeholder="dd-mm-yyyy">
                     </div>
                     <div class="form-group mb-4">
                         <label for="">Phone</label>
@@ -34,7 +69,7 @@ if (isset($_SESSION['student'])) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Save changes</button>
+                    <button type="submit" class="btn btn-success" name="save-btn">Save changes</button>
                 </div>
             </form>
         </div>
@@ -52,6 +87,17 @@ if (isset($_SESSION['student'])) {
     </nav>
     <!-- MAIN content -->
     <div class="container-fluid mt-4">
+        <?php
+        if (isset($_SESSION['success'])) {
+        ?>
+            <div class="alert alert-success alert-dismissible fade show fw-bolder" role="alert">
+                <?= $_SESSION['success'] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php
+            unset($_SESSION['success']);
+        }
+        ?>
         <div class="card">
             <div class="card-header">
                 <h3>Student: <strong><?= $student['name'] ?></strong> </h3>
@@ -80,4 +126,3 @@ if (isset($_SESSION['student'])) {
 include('../CSE485_BTTH02/layouts/includes/sidebar.php');
 include('./layouts/assets/footer.php');
 ?>
-
