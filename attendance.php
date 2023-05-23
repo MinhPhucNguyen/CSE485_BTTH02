@@ -55,7 +55,7 @@ if (isset($_POST['attendence-btn'])) {
     $query->bindValue(5, $state, PDO::PARAM_INT);
     $query->execute();
 
-    if ($query) {
+    if ($query->rowCount() > 0) {
         $_SESSION['success'] = "Attendance successfully";
         header("Location: attendance.php");
     }
@@ -100,6 +100,7 @@ if (isset($_POST['attendence-btn'])) {
                                 </a>
                             <?php
                             }
+
                             ?>
                         </div>
                     </div>
@@ -111,7 +112,11 @@ if (isset($_POST['attendence-btn'])) {
                                 <div class="tab-pane fade show" id="list-<?= $course['code_course'] ?>" role="tabpanel" aria-labelledby="list-<?= $course['code_course'] ?>-list">
                                     <div class="border rounded-bottom">
                                         <?php
-                                        $sql = "SELECT c.*, a.time_start, a.time_end FROM classes as c INNER JOIN attend_time as a ON c.code_course = a.code_course  WHERE c.code_course = ?";
+
+                                        $sql = "SELECT c.*, a.time_start, a.time_end, r.state FROM classes as c 
+                                        INNER JOIN attend_time as a ON c.code_course = a.code_course AND c.id_class = c.id_class 
+                                        INNER JOIN registered as r ON c.code_course = r.code_course AND c.id_class = r.id_class WHERE c.code_course = ?";
+
                                         $query = $conn->prepare($sql);
                                         $query->bindValue(1, $course['code_course']);
                                         $query->execute();
@@ -125,6 +130,8 @@ if (isset($_POST['attendence-btn'])) {
                                                     && ($attendance['id_class'] == $class['id_class'])
                                                 ) {
                                                     $isAttendanced = true;
+                                                } else {
+                                                    $isAttendanced = false;
                                                 }
                                             }
                                         ?>
@@ -135,6 +142,7 @@ if (isset($_POST['attendence-btn'])) {
                                                     <input type="hidden" name="timeClass" value="<?= $class['time_class'] ?>">
                                                     <div class="bg-secondary text-white p-3 rounded-top">
                                                         Class: <strong><?= $class['class_name'] ?></strong>
+
                                                     </div>
                                                     <table class="table table-bordered table-striped class-section">
                                                         <thead>
@@ -147,9 +155,23 @@ if (isset($_POST['attendence-btn'])) {
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td class="fw-bolder">
+                                                                <td class="fw-bolder  <?= $isAttendanced ? 'text-success' : 'text-danger' ?>  ">
                                                                     <input type="hidden" name="time_class" value="<?= date("Y-m-d H:i:s") ?>">
-                                                                    <?= $class['time_start'] ?> <i class="fa-solid fa-arrow-right text-danger"></i> <?= $class['time_end'] ?>
+                                                                    (
+                                                                    <?php
+                                                                    $date = new DateTime($class['time_start']);
+                                                                    echo $date->format('l');
+                                                                    ?>
+                                                                    )
+                                                                    <?php
+                                                                    $timeStart = new DateTime($class['time_start']);
+                                                                    echo  $timeStart->format('H:i:s');
+                                                                    ?>
+                                                                    <i class="fa-solid fa-arrow-right text-danger"></i>
+                                                                    <?php
+                                                                    $timeEnd = new DateTime($class['time_end']);
+                                                                    echo  $timeStart->format('H:i:s');
+                                                                    ?>
                                                                 </td>
                                                                 <td name="class_name"><?= $class['class_name'] ?></td>
                                                                 <td name="id_teacher">

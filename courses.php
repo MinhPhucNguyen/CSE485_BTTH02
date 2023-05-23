@@ -116,7 +116,7 @@ if (isset($_POST['registerBtn'])) {
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    <td name="time_class"><?= $class['time_class'] ?></td>
+                                                                    <td name="time_class" class="fw-bolder"><?= $class['time_class'] ?></td>
                                                                     <td name="class_name"><?= $class['class_name'] ?></td>
                                                                     <td name="id_teacher"><?= $class['id_teacher'] ?></td>
                                                                     <td>

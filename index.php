@@ -21,7 +21,6 @@ $_SESSION['student'] = $student;
 <?php
 include('../CSE485_BTTH02/layouts/includes/sidebar.php');
 ?>
-
 <?php
 include('./layouts/assets/footer.php');
 ?>
