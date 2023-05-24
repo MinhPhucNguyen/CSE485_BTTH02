@@ -119,17 +119,11 @@ if (isset($_POST['registerBtn'])) {
                                                                     <td name="time_class" class="fw-bolder"><?= $class['time_class'] ?></td>
                                                                     <td name="class_name"><?= $class['class_name'] ?></td>
                                                                     <td name="id_teacher"><?= $class['id_teacher'] ?></td>
-<<<<<<< HEAD
-                                                                    <td> <button type="submit" name="registerBtn" class="btn btn-warning text-white">
-                                                                            Register
-                                                                        </button></td>
-=======
                                                                     <td>
                                                                         <button type="submit" name="registerBtn" class="btn <?= $isRegistered ? 'btn-success' : 'btn-primary' ?> text-white register-btn" <?= $isRegistered ? 'disabled' : '' ?>>
                                                                             <?= $isRegistered ? 'Registered' : 'Register' ?>
                                                                         </button>
                                                                     </td>
->>>>>>> cb9ae0c683b7a9dbe05d215150a5332ff162fc1a
                                                                 </tr>
                                                             </tbody>
                                                         </table>
